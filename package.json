@@ -1,0 +1,36 @@
+{
+  "name": "@vlindersoftware/node-event-superschema",
+  "version": "0.0.1",
+  "description": "Event super-schema and supporting functions for Node.js/TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "event",
+    "schema",
+    "superschema",
+    "validation"
+  ],
+  "author": "Ronald Landheer-Cieslak <rlc@vlinder.ca>",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "node-jose": "^2.2.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.2.1",
+    "@types/node-jose": "^1.1.13",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
