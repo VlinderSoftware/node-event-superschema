@@ -1,0 +1,42 @@
+---
+name: ci_validate_node
+
+on:
+  pull_request:
+  push:
+    branches:
+      - dev
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # non-blocking: production dependency tree already has unresolved
+      # vulnerabilities (node-forge, lodash, fast-uri, ajv via node-jose) that
+      # predate this CI, not regressions from a Dependabot bump - see
+      # repo-manifest.yml notes
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
