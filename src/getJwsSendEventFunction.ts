@@ -26,7 +26,10 @@ export function getJwsSendEventFunction(
     send(result as any);
   }
 
-  const innerSend = getSendEventFunction(signThenSend as any, pid, dataPreprocessors);
+  let pending: Promise<void> = Promise.resolve();
+  const innerSend = getSendEventFunction((formattedEvent: any) => {
+    pending = signThenSend(formattedEvent);
+  }, pid, dataPreprocessors);
 
   return async function sendEvent(
     eventType: string,
@@ -36,5 +39,6 @@ export function getJwsSendEventFunction(
     token?: string
   ): Promise<void> {
     innerSend(eventType, eventData, cid, uid, token);
+    await pending;
   };
 }
