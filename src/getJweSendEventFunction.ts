@@ -28,7 +28,10 @@ export function getJweSendEventFunction(
     send(encrypted);
   }
 
-  const innerSend = getSendEventFunction(encryptThenSend as any, pid, dataPreprocessors);
+  let pending: Promise<void> = Promise.resolve();
+  const innerSend = getSendEventFunction((formattedEvent: any) => {
+    pending = encryptThenSend(formattedEvent);
+  }, pid, dataPreprocessors);
 
   return async function sendEvent(
     eventType: string,
@@ -38,5 +41,6 @@ export function getJweSendEventFunction(
     token?: string
   ): Promise<void> {
     innerSend(eventType, eventData, cid, uid, token);
+    await pending;
   };
 }

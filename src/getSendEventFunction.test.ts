@@ -87,6 +87,24 @@ describe('getSendEventFunction', () => {
     expect(sentEvent.data).toEqual(preprocessedData);
   });
 
+  test('falls back to an identity preprocessor when preprocessors lacks __default__', () => {
+    const mockSend = jest.fn();
+    const pid = '550e8400-e29b-41d4-a716-446655440000';
+    const eventData = { value: 'unchanged' };
+
+    const preprocessors = {
+      'other.event': (data: any) => ({ ...data, processed: true })
+    };
+
+    const sendEvent = getSendEventFunction(mockSend, pid, preprocessors);
+
+    sendEvent('test.event', eventData);
+
+    const sentEvent = mockSend.mock.calls[0][0];
+
+    expect(sentEvent.data).toEqual(eventData);
+  });
+
   test('uses default preprocessor when no specific preprocessor exists', () => {
     const mockSend = jest.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
@@ -119,6 +137,18 @@ describe('getSendEventFunction', () => {
 
     expect(event1.id).toBeDefined();
     expect(event2.id).toBeDefined();
+  });
+
+  test('generates a process ID when pid is an empty string', () => {
+    const mockSend = jest.fn();
+
+    const sendEvent = getSendEventFunction(mockSend, '');
+
+    sendEvent('test.event');
+
+    const sentEvent = mockSend.mock.calls[0][0];
+
+    expect(sentEvent.metadata.pid).toBe('550e8400-e29b-41d4-a716-446655440099');
   });
 
   test('uses event ID as cid and tid when not provided', () => {
