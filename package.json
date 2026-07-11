@@ -32,5 +32,18 @@
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "test-exclude": {
+      "minimatch": "^3.1.5",
+      "glob": {
+        "minimatch": "^3.1.5"
+      }
+    },
+    "@jest/reporters": {
+      "glob": {
+        "minimatch": "^9.0.9"
+      }
+    }
   }
 }
