@@ -98,14 +98,20 @@ describe('getJwsEventDispatcher', () => {
     const mockError = jest.fn();
     const handlers: EventHandlers = { 'test.event': jest.fn() };
 
-    const dispatcher = getJwsEventDispatcher(mockError, handlers, keyJson, 'HS256');
-    // An empty string makes node-jose throw a genuine TypeError while parsing
-    // the compact serialization, exercising the "unsigned event?" branch.
-    await dispatcher('');
-
-    expect(mockError).toHaveBeenCalledWith({
-      error: 'InternalError',
-      message: 'AttributeError while parsing the event -- unsigned event?'
+    const spy = jest.spyOn(jose.JWS, 'createVerify').mockImplementation(() => {
+      throw new TypeError('boom');
     });
+
+    try {
+      const dispatcher = getJwsEventDispatcher(mockError, handlers, keyJson, 'HS256');
+      await dispatcher('irrelevant-input');
+
+      expect(mockError).toHaveBeenCalledWith({
+        error: 'InternalError',
+        message: 'AttributeError while parsing the event -- unsigned event?'
+      });
+    } finally {
+      spy.mockRestore();
+    }
   });
 });
