@@ -1,0 +1,36 @@
+---
+name: sca
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: "0 6 * * *"
+
+jobs:
+  baseline:
+    if: github.event_name == 'push'
+    uses: vln-devsecops/actions-sca-syft-grype/.github/workflows/sca-baseline.yml@v1
+    permissions:
+      contents: read
+    with:
+      baseline-branches: '["dev"]'
+
+  pr-scan:
+    if: github.event_name == 'pull_request'
+    uses: vln-devsecops/actions-sca-syft-grype/.github/workflows/sca-pr.yml@v1
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
+      actions: read
+
+  mainline:
+    if: github.event_name == 'schedule'
+    uses: vln-devsecops/actions-sca-syft-grype/.github/workflows/sca-mainline.yml@v1
+    permissions:
+      contents: read
+      checks: write
+      actions: read
