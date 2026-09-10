@@ -12,6 +12,16 @@ This library provides support for a generic super-schema for event handling, inc
 
 ## Installation
 
+Published to GitHub Packages, not the public npm registry. Configure npm to
+resolve the `@vlindersoftware` scope there first (per-project `.npmrc` or
+`~/.npmrc`), authenticated with a GitHub token that has at least
+`read:packages`:
+
+```
+@vlindersoftware:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
+```
+
 ```bash
 npm install @vlindersoftware/node-event-superschema
 ```
