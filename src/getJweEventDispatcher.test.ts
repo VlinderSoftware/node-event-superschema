@@ -1,3 +1,4 @@
+import { describe, test, expect, vi } from 'vitest';
 import * as jose from 'node-jose';
 import { getJweEventDispatcher } from './getJweEventDispatcher';
 import { ErrorHandler, EventHandlers } from './getEventDispatcher';
@@ -29,8 +30,8 @@ describe('getJweEventDispatcher', () => {
     const keyJson = await generateEncKey();
     const encrypted = await encrypt(validEvent, keyJson);
 
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
     const handlers: EventHandlers = { 'test.event': mockHandler };
 
     const dispatcher = getJweEventDispatcher(mockError, handlers, keyJson);
@@ -45,8 +46,8 @@ describe('getJweEventDispatcher', () => {
     const wrongKeyJson = await generateEncKey();
     const encrypted = await encrypt(validEvent, keyJson);
 
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
     const handlers: EventHandlers = { 'test.event': mockHandler };
 
     const dispatcher = getJweEventDispatcher(mockError, handlers, wrongKeyJson);
@@ -61,8 +62,8 @@ describe('getJweEventDispatcher', () => {
 
   test('calls error handler with DecryptionError for garbage input', async () => {
     const keyJson = await generateEncKey();
-    const mockError = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
     const dispatcher = getJweEventDispatcher(mockError, handlers, keyJson);
     await dispatcher('this-is-not-a-jwe-token');
@@ -73,11 +74,10 @@ describe('getJweEventDispatcher', () => {
 
   test('calls error handler with DecryptionError, stringifying a non-Error throwable', async () => {
     const keyJson = await generateEncKey();
-    const mockError: ErrorHandler = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError: ErrorHandler = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
-    const spy = jest.spyOn(jose.JWE, 'createDecrypt').mockImplementation(() => {
-      // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    const spy = vi.spyOn(jose.JWE, 'createDecrypt').mockImplementation(() => {
       throw 'raw-string-failure';
     });
 
@@ -96,10 +96,10 @@ describe('getJweEventDispatcher', () => {
 
   test('calls error handler with InternalError when a TypeError occurs while decrypting', async () => {
     const keyJson = await generateEncKey();
-    const mockError: ErrorHandler = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError: ErrorHandler = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
-    const spy = jest.spyOn(jose.JWE, 'createDecrypt').mockImplementation(() => {
+    const spy = vi.spyOn(jose.JWE, 'createDecrypt').mockImplementation(() => {
       throw new TypeError('boom');
     });
 

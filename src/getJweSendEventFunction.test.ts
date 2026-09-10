@@ -1,8 +1,9 @@
+import { describe, test, expect, vi } from 'vitest';
 import * as jose from 'node-jose';
 import { getJweSendEventFunction } from './getJweSendEventFunction';
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => '550e8400-e29b-41d4-a716-446655440099')
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => '550e8400-e29b-41d4-a716-446655440099')
 }));
 
 async function generateEncKey(alg: string = 'A256GCM', size: number = 256): Promise<string> {
@@ -21,7 +22,7 @@ async function decrypt(encrypted: string, keyJson: string): Promise<any> {
 describe('getJweSendEventFunction', () => {
   test('encrypts a properly formatted event and sends the ciphertext', async () => {
     const keyJson = await generateEncKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getJweSendEventFunction(mockSend, pid, undefined, keyJson);
@@ -41,7 +42,7 @@ describe('getJweSendEventFunction', () => {
 
   test('supports a custom algorithm and encryption', async () => {
     const keyJson = await generateEncKey('A128GCM', 128);
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getJweSendEventFunction(mockSend, pid, undefined, keyJson, 'dir', 'A128GCM');
@@ -55,7 +56,7 @@ describe('getJweSendEventFunction', () => {
 
   test('applies data preprocessors before encrypting', async () => {
     const keyJson = await generateEncKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const preprocessors = {
       'test.event': (data: any) => ({ transformed: data.value })
@@ -71,7 +72,7 @@ describe('getJweSendEventFunction', () => {
   });
 
   test('rejects when no encryption key is provided (default empty key)', async () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getJweSendEventFunction(mockSend, pid);
@@ -82,7 +83,7 @@ describe('getJweSendEventFunction', () => {
 
   test('propagates cid, uid and token into the encrypted event metadata', async () => {
     const keyJson = await generateEncKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const cid = '550e8400-e29b-41d4-a716-446655440001';
     const uid = '550e8400-e29b-41d4-a716-446655440002';

@@ -1,7 +1,8 @@
+import { describe, test, expect, vi } from 'vitest';
 import * as jose from 'node-jose';
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => '550e8400-e29b-41d4-a716-446655440099')
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => '550e8400-e29b-41d4-a716-446655440099')
 }));
 
 import {
@@ -41,8 +42,8 @@ describe('index', () => {
     const sendEvent = getJweSendEventFunction(send, pid, undefined, keyJson);
     await sendEvent('test.event', { hello: 'world' });
 
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
     const dispatcher = getJweEventDispatcher(mockError, { 'test.event': mockHandler }, keyJson);
     await dispatcher(transmitted);
 
@@ -67,8 +68,8 @@ describe('index', () => {
     const sendEvent = getJwsSendEventFunction(send, pid, keyJson, 'HS256');
     await sendEvent('test.event', { hello: 'world' });
 
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
     const dispatcher = getJwsEventDispatcher(mockError, { 'test.event': mockHandler }, keyJson, 'HS256');
     await dispatcher(transmitted);
 

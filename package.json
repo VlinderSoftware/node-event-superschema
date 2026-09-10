@@ -6,9 +6,10 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "oxlint ."
   },
   "keywords": [
     "event",
@@ -26,24 +27,11 @@
     "uuid": "^14.0.2"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
     "@types/node": "^26.4.1",
     "@types/node-jose": "^1.1.13",
-    "jest": "^30.4.2",
-    "ts-jest": "^29.4.12",
-    "typescript": "^5.9.3"
-  },
-  "overrides": {
-    "test-exclude": {
-      "minimatch": "^3.1.5",
-      "glob": {
-        "minimatch": "^3.1.5"
-      }
-    },
-    "@jest/reporters": {
-      "glob": {
-        "minimatch": "^9.0.9"
-      }
-    }
+    "@vitest/coverage-v8": "^5.0.0",
+    "oxlint": "^1.82.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.0"
   }
 }
