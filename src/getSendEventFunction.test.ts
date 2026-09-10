@@ -1,13 +1,14 @@
+import { describe, test, expect, vi } from 'vitest';
 import { getSendEventFunction } from './getSendEventFunction';
 
 // Mock uuid
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => '550e8400-e29b-41d4-a716-446655440099')
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => '550e8400-e29b-41d4-a716-446655440099')
 }));
 
 describe('getSendEventFunction', () => {
   test('sends a properly formatted event', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getSendEventFunction(mockSend, pid);
@@ -25,7 +26,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('sends event with custom cid and uid', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const cid = '550e8400-e29b-41d4-a716-446655440001';
     const uid = '550e8400-e29b-41d4-a716-446655440002';
@@ -41,7 +42,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('sends event with token', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const token = 'test-token';
 
@@ -55,7 +56,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('sends event with data', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const eventData = { test: 'data' };
 
@@ -69,13 +70,13 @@ describe('getSendEventFunction', () => {
   });
 
   test('preprocesses data with custom preprocessor', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const eventData = { value: 'original' };
     const preprocessedData = { value: 'preprocessed' };
 
     const preprocessors = {
-      'test.event': (data: any) => preprocessedData
+      'test.event': (_data: any) => preprocessedData
     };
 
     const sendEvent = getSendEventFunction(mockSend, pid, preprocessors);
@@ -88,7 +89,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('falls back to an identity preprocessor when preprocessors lacks __default__', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const eventData = { value: 'unchanged' };
 
@@ -106,7 +107,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('uses default preprocessor when no specific preprocessor exists', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const eventData = { value: 'data' };
 
@@ -124,7 +125,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('generates event IDs for each event', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getSendEventFunction(mockSend, pid);
@@ -140,7 +141,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('generates a process ID when pid is an empty string', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
 
     const sendEvent = getSendEventFunction(mockSend, '');
 
@@ -152,7 +153,7 @@ describe('getSendEventFunction', () => {
   });
 
   test('uses event ID as cid and tid when not provided', () => {
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getSendEventFunction(mockSend, pid);

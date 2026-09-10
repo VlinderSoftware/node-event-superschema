@@ -1,9 +1,10 @@
-import { getEventDispatcher, ErrorHandler, EventHandlers } from './getEventDispatcher';
+import { describe, test, expect, vi } from 'vitest';
+import { getEventDispatcher, EventHandlers } from './getEventDispatcher';
 
 describe('getEventDispatcher', () => {
   test('dispatches valid event to correct handler', () => {
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
 
     const handlers: EventHandlers = {
       'test.event': mockHandler
@@ -27,8 +28,8 @@ describe('getEventDispatcher', () => {
   });
 
   test('calls error handler for invalid event', () => {
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
 
     const handlers: EventHandlers = {
       'test.event': mockHandler
@@ -54,8 +55,8 @@ describe('getEventDispatcher', () => {
   });
 
   test('dispatches to base event handler when specific handler not found', () => {
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
 
     const handlers: EventHandlers = {
       'test.event': mockHandler
@@ -79,8 +80,8 @@ describe('getEventDispatcher', () => {
   });
 
   test('dispatches to default handler when no matching handler found', () => {
-    const mockError = jest.fn();
-    const mockDefaultHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockDefaultHandler = vi.fn();
 
     const handlers: EventHandlers = {
       '__default__': mockDefaultHandler
@@ -104,10 +105,10 @@ describe('getEventDispatcher', () => {
   });
 
   test('does nothing when no matching handler and no default handler', () => {
-    const mockError = jest.fn();
+    const mockError = vi.fn();
 
     const handlers: EventHandlers = {
-      'test.event': jest.fn()
+      'test.event': vi.fn()
     };
 
     const dispatcher = getEventDispatcher(mockError, handlers);

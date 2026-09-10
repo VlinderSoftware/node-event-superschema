@@ -1,3 +1,4 @@
+import { describe, test, expect, vi } from 'vitest';
 import * as jose from 'node-jose';
 import { getJwsEventDispatcher } from './getJwsEventDispatcher';
 import { EventHandlers } from './getEventDispatcher';
@@ -30,8 +31,8 @@ describe('getJwsEventDispatcher', () => {
     const keyJson = await generateSigKey();
     const signed = await sign(validEvent, keyJson);
 
-    const mockError = jest.fn();
-    const mockHandler = jest.fn();
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
     const handlers: EventHandlers = { 'test.event': mockHandler };
 
     const dispatcher = getJwsEventDispatcher(mockError, handlers, keyJson, 'HS256');
@@ -46,8 +47,8 @@ describe('getJwsEventDispatcher', () => {
     const wrongKeyJson = await generateSigKey();
     const signed = await sign(validEvent, keyJson);
 
-    const mockError = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
     const dispatcher = getJwsEventDispatcher(mockError, handlers, wrongKeyJson, 'HS256');
     await dispatcher(signed);
@@ -60,8 +61,8 @@ describe('getJwsEventDispatcher', () => {
 
   test('calls error handler with VerificationError for garbage input', async () => {
     const keyJson = await generateSigKey();
-    const mockError = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
     const dispatcher = getJwsEventDispatcher(mockError, handlers, keyJson, 'HS256');
     await dispatcher('this-is.not-a.valid-jws');
@@ -72,11 +73,10 @@ describe('getJwsEventDispatcher', () => {
 
   test('calls error handler with VerificationError, stringifying a non-Error throwable', async () => {
     const keyJson = await generateSigKey();
-    const mockError = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
-    const spy = jest.spyOn(jose.JWS, 'createVerify').mockImplementation(() => {
-      // eslint-disable-next-line @typescript-eslint/no-throw-literal
+    const spy = vi.spyOn(jose.JWS, 'createVerify').mockImplementation(() => {
       throw 'raw-string-failure';
     });
 
@@ -95,10 +95,10 @@ describe('getJwsEventDispatcher', () => {
 
   test('calls error handler with InternalError when a TypeError occurs while verifying', async () => {
     const keyJson = await generateSigKey();
-    const mockError = jest.fn();
-    const handlers: EventHandlers = { 'test.event': jest.fn() };
+    const mockError = vi.fn();
+    const handlers: EventHandlers = { 'test.event': vi.fn() };
 
-    const spy = jest.spyOn(jose.JWS, 'createVerify').mockImplementation(() => {
+    const spy = vi.spyOn(jose.JWS, 'createVerify').mockImplementation(() => {
       throw new TypeError('boom');
     });
 

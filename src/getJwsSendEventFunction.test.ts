@@ -1,8 +1,9 @@
+import { describe, test, expect, vi } from 'vitest';
 import * as jose from 'node-jose';
 import { getJwsSendEventFunction } from './getJwsSendEventFunction';
 
-jest.mock('uuid', () => ({
-  v4: jest.fn(() => '550e8400-e29b-41d4-a716-446655440099')
+vi.mock('uuid', () => ({
+  v4: vi.fn(() => '550e8400-e29b-41d4-a716-446655440099')
 }));
 
 async function generateSigKey(alg: string = 'HS256', size: number = 256): Promise<string> {
@@ -21,7 +22,7 @@ async function verify(signed: string, keyJson: string, alg: string = 'HS256'): P
 describe('getJwsSendEventFunction', () => {
   test('signs a properly formatted event and sends the compact JWS', async () => {
     const keyJson = await generateSigKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getJwsSendEventFunction(mockSend, pid, keyJson, 'HS256');
@@ -41,7 +42,7 @@ describe('getJwsSendEventFunction', () => {
 
   test('supports a different signing algorithm', async () => {
     const keyJson = await generateSigKey('HS384', 384);
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
 
     const sendEvent = getJwsSendEventFunction(mockSend, pid, keyJson, 'HS384');
@@ -55,7 +56,7 @@ describe('getJwsSendEventFunction', () => {
 
   test('applies data preprocessors before signing', async () => {
     const keyJson = await generateSigKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const preprocessors = {
       'test.event': (data: any) => ({ transformed: data.value })
@@ -72,7 +73,7 @@ describe('getJwsSendEventFunction', () => {
 
   test('propagates cid, uid and token into the signed event metadata', async () => {
     const keyJson = await generateSigKey();
-    const mockSend = jest.fn();
+    const mockSend = vi.fn();
     const pid = '550e8400-e29b-41d4-a716-446655440000';
     const cid = '550e8400-e29b-41d4-a716-446655440001';
     const uid = '550e8400-e29b-41d4-a716-446655440002';

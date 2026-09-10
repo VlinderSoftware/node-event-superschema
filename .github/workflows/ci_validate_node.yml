@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
       # non-blocking: production dependency tree already has unresolved
       # vulnerabilities (node-forge, lodash, fast-uri, ajv via node-jose) that
       # predate this CI, not regressions from a Dependabot bump - see
