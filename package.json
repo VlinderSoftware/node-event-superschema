@@ -37,7 +37,7 @@
     "@types/node": "^26.6.1",
     "@types/node-jose": "^1.1.13",
     "@vitest/coverage-v8": "^5.0.0",
-    "oxlint": "^1.82.0",
+    "oxlint": "^1.83.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.1"
   }
