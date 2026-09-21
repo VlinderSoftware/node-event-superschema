@@ -34,7 +34,7 @@
     "uuid": "^14.0.2"
   },
   "devDependencies": {
-    "@types/node": "^26.5.1",
+    "@types/node": "^26.6.1",
     "@types/node-jose": "^1.1.13",
     "@vitest/coverage-v8": "^5.0.0",
     "oxlint": "^1.82.0",
