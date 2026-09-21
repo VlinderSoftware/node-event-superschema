@@ -36,7 +36,7 @@
   "devDependencies": {
     "@types/node": "^26.5.1",
     "@types/node-jose": "^1.1.13",
-    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/coverage-v8": "^5.0.1",
     "oxlint": "^1.82.0",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0"
