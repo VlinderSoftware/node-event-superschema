@@ -13,7 +13,9 @@ import {
   getJweEventDispatcher,
   getJwsEventDispatcher,
   getJweSendEventFunction,
-  getJwsSendEventFunction
+  getJwsSendEventFunction,
+  ALLOWED_JWS_ALGORITHMS,
+  assertAllowedJwsAlgorithm
 } from './index';
 
 describe('index', () => {
@@ -26,6 +28,8 @@ describe('index', () => {
     expect(typeof getJwsEventDispatcher).toBe('function');
     expect(typeof getJweSendEventFunction).toBe('function');
     expect(typeof getJwsSendEventFunction).toBe('function');
+    expect(ALLOWED_JWS_ALGORITHMS).toContain('HS256');
+    expect(typeof assertAllowedJwsAlgorithm).toBe('function');
   });
 
   test('supports a full send/dispatch round trip over JWE', async () => {

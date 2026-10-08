@@ -131,6 +131,17 @@ const jwsSendEvent = await getJwsSendEventFunction(
 );
 ```
 
+Only the algorithms in `ALLOWED_JWS_ALGORITHMS` are accepted: `HS256`,
+`HS384`, `HS512`, `PS256`, `PS384`, `PS512`, `ES256`, `ES384` and `ES512`.
+Both functions throw when constructed with anything else, and the dispatcher
+only verifies events signed with the algorithm it was configured for.
+
+RSASSA-PKCS1-v1_5 (`RS256`, `RS384`, `RS512`) is rejected: `node-jose` can
+fall back to `node-forge` to verify these signatures, and `node-forge`'s
+PKCS#1 v1.5 verification is vulnerable to signature forgery
+([CVE-2026-85393](https://github.com/advisories/GHSA-86w9-cpqp-85rv)) with no
+patched release. Use `PS256` (RSASSA-PSS) if you need RSA keys.
+
 ## Development
 
 ```bash

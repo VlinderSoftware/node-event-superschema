@@ -23,3 +23,4 @@ export { getJweEventDispatcher } from './getJweEventDispatcher';
 export { getJwsEventDispatcher } from './getJwsEventDispatcher';
 export { getJweSendEventFunction } from './getJweSendEventFunction';
 export { getJwsSendEventFunction } from './getJwsSendEventFunction';
+export { ALLOWED_JWS_ALGORITHMS, assertAllowedJwsAlgorithm } from './jwsAlgorithms';

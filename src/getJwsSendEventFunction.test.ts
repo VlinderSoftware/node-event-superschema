@@ -89,4 +89,11 @@ describe('getJwsSendEventFunction', () => {
     expect(verified.metadata.uid).toBe(uid);
     expect(verified.metadata.token).toBe(token);
   });
+
+  test.each(['RS256', 'RS384', 'RS512', 'none'])('refuses to construct a send function for %s', async (alg) => {
+    const keyJson = await generateSigKey();
+    expect(() => getJwsSendEventFunction(vi.fn(), '550e8400-e29b-41d4-a716-446655440000', keyJson, alg)).toThrow(
+      /not allowed/
+    );
+  });
 });
