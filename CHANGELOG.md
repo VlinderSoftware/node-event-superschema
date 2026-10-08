@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/VlinderSoftware/node-event-superschema/compare/v1.0.0...v2.0.0) (2026-10-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* **jws:** reject RSASSA-PKCS1-v1_5 signature algorithms ([#55](https://github.com/VlinderSoftware/node-event-superschema/issues/55))
+
+### Bug Fixes
+
+* **jws:** reject RSASSA-PKCS1-v1_5 signature algorithms ([#55](https://github.com/VlinderSoftware/node-event-superschema/issues/55)) ([703edaa](https://github.com/VlinderSoftware/node-event-superschema/commit/703edaafe00e7953314278a8f625fbabb6fd3516))
+
 ## 1.0.0 (2026-09-10)
 
 
