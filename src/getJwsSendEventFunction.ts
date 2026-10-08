@@ -1,4 +1,5 @@
 import * as jose from 'node-jose';
+import { assertAllowedJwsAlgorithm } from './jwsAlgorithms';
 import { getSendEventFunction, DataPreprocessors } from './getSendEventFunction';
 
 /**
@@ -7,7 +8,7 @@ import { getSendEventFunction, DataPreprocessors } from './getSendEventFunction'
  * @param send - A generic function to send events on the event bus
  * @param pid - Producer ID
  * @param key - Signing key
- * @param algorithm - Signing algorithm
+ * @param algorithm - Signing algorithm; must be one of ALLOWED_JWS_ALGORITHMS
  * @param dataPreprocessors - Optional dict mapping event types to their data preprocessors
  * @returns A function to send signed events
  */
@@ -18,6 +19,7 @@ export function getJwsSendEventFunction(
   algorithm: string,
   dataPreprocessors?: DataPreprocessors
 ): (eventType: string, eventData?: any, cid?: string, uid?: string, token?: string) => Promise<void> {
+  assertAllowedJwsAlgorithm(algorithm);
   async function signThenSend(formattedEvent: any): Promise<void> {
     const keystore = jose.JWK.createKeyStore();
     const jwk = await keystore.add(key, 'json');

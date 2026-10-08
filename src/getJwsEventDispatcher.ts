@@ -1,4 +1,5 @@
 import * as jose from 'node-jose';
+import { assertAllowedJwsAlgorithm } from './jwsAlgorithms';
 import { getEventDispatcher, ErrorHandler, EventHandlers } from './getEventDispatcher';
 
 /**
@@ -7,7 +8,7 @@ import { getEventDispatcher, ErrorHandler, EventHandlers } from './getEventDispa
  * @param err - Error handler
  * @param handlers - Event handlers
  * @param key - Verification key
- * @param algorithm - Signing algorithm
+ * @param algorithm - Signing algorithm; must be one of ALLOWED_JWS_ALGORITHMS
  * @returns A dispatcher that verifies JWS events and dispatches them
  */
 export function getJwsEventDispatcher(
@@ -16,6 +17,7 @@ export function getJwsEventDispatcher(
   key: string,
   algorithm: string
 ): (signedEvent: string) => Promise<void> {
+  assertAllowedJwsAlgorithm(algorithm);
   const innerDispatcher = getEventDispatcher(err, handlers);
 
   return async function dispatch(signedEvent: string): Promise<void> {

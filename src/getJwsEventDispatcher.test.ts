@@ -114,4 +114,50 @@ describe('getJwsEventDispatcher', () => {
       spy.mockRestore();
     }
   });
+
+  test.each(['RS256', 'RS384', 'RS512', 'none'])('refuses to construct a dispatcher for %s', async (alg) => {
+    const keyJson = await generateSigKey();
+    expect(() => getJwsEventDispatcher(vi.fn(), {}, keyJson, alg)).toThrow(/not allowed/);
+  });
+
+  test('rejects an RS256-signed event even if the verification key is an RSA key', async () => {
+    const keystore = jose.JWK.createKeyStore();
+    const rsaKey = await keystore.generate('RSA', 2048, { alg: 'RS256', use: 'sig' });
+    const signed = await sign(validEvent, JSON.stringify(rsaKey.toJSON(true)), 'RS256');
+
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
+    const dispatcher = getJwsEventDispatcher(
+      mockError,
+      { 'test.event': mockHandler },
+      JSON.stringify(rsaKey.toJSON()),
+      'PS256'
+    );
+    await dispatcher(signed);
+
+    expect(mockHandler).not.toHaveBeenCalled();
+    expect(mockError).toHaveBeenCalledTimes(1);
+    expect(mockError.mock.calls[0][0].error).toBe('VerificationError');
+  });
+
+  test.each(['PS256', 'ES256'])('verifies and dispatches an event signed with %s', async (alg) => {
+    const keystore = jose.JWK.createKeyStore();
+    const key = alg.startsWith('PS')
+      ? await keystore.generate('RSA', 2048, { alg, use: 'sig' })
+      : await keystore.generate('EC', 'P-256', { alg, use: 'sig' });
+    const signed = await sign(validEvent, JSON.stringify(key.toJSON(true)), alg);
+
+    const mockError = vi.fn();
+    const mockHandler = vi.fn();
+    const dispatcher = getJwsEventDispatcher(
+      mockError,
+      { 'test.event': mockHandler },
+      JSON.stringify(key.toJSON()),
+      alg
+    );
+    await dispatcher(signed);
+
+    expect(mockError).not.toHaveBeenCalled();
+    expect(mockHandler).toHaveBeenCalledWith(mockError, validEvent);
+  });
 });
