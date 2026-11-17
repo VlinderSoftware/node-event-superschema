@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/VlinderSoftware/node-event-superschema/compare/v2.0.0...v2.0.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** group vitest packages in dependabot ([#73](https://github.com/VlinderSoftware/node-event-superschema/issues/73)) ([2b29a6d](https://github.com/VlinderSoftware/node-event-superschema/commit/2b29a6d868bb459b9244df5684b22be6f3ab39d7))
+
 ## [2.0.0](https://github.com/VlinderSoftware/node-event-superschema/compare/v1.0.0...v2.0.0) (2026-10-08)
 
 
